@@ -7,6 +7,9 @@ abstract class Drawable {
   bufPos: WebGLBuffer;
   bufNor: WebGLBuffer;
   bufTranslate: WebGLBuffer;
+  bufRotation: WebGLBuffer;
+  bufRight : WebGLBuffer;
+  bufUp : WebGLBuffer;
   bufCol: WebGLBuffer;
   bufUV: WebGLBuffer;
 
@@ -15,6 +18,9 @@ abstract class Drawable {
   norGenerated: boolean = false;
   colGenerated: boolean = false;
   translateGenerated: boolean = false;
+  rotationGenerated: boolean = false;
+  rightGenerated: boolean = false;
+  upGenerated: boolean = false;
   uvGenerated: boolean = false;
 
   numInstances: number = 0; // How many instances of this Drawable the shader program should draw
@@ -27,6 +33,9 @@ abstract class Drawable {
     gl.deleteBuffer(this.bufNor);
     gl.deleteBuffer(this.bufCol);
     gl.deleteBuffer(this.bufTranslate);
+    gl.deleteBuffer(this.bufRotation);
+    gl.deleteBuffer(this.bufRight);
+    gl.deleteBuffer(this.bufUp);
     gl.deleteBuffer(this.bufUV);
   }
 
@@ -53,6 +62,21 @@ abstract class Drawable {
   generateTranslate() {
     this.translateGenerated = true;
     this.bufTranslate = gl.createBuffer();
+  }
+
+  generateRotation() {
+    this.rotationGenerated = true;
+    this.bufRotation = gl.createBuffer();
+  }
+
+  generateRight() {
+    this.rightGenerated = true;
+    this.bufRight = gl.createBuffer();
+  }
+
+  generateUp() {
+    this.upGenerated = true;
+    this.bufUp = gl.createBuffer();
   }
 
   generateUV() {
@@ -93,6 +117,27 @@ abstract class Drawable {
       gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTranslate);
     }
     return this.translateGenerated;
+  }
+
+  bindRotation(): boolean {
+    if (this.rotationGenerated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufRotation);
+    }
+    return this.rotationGenerated;
+  }
+
+  bindRight(): boolean {
+    if (this.rightGenerated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufRight);
+    }
+    return this.rightGenerated;
+  }
+
+  bindUp(): boolean {
+    if (this.upGenerated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufUp);
+    }
+    return this.upGenerated;
   }
 
   bindUV(): boolean {

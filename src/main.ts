@@ -7,6 +7,9 @@ import OpenGLRenderer from './rendering/gl/OpenGLRenderer';
 import Camera from './Camera';
 import {setGL} from './globals';
 import ShaderProgram, {Shader} from './rendering/gl/ShaderProgram';
+import LSystem from './LSystem';
+import {readTextFile} from './globals';
+import Mesh from './geometry/Mesh';
 
 // Define an object with application parameters and button callbacks
 // This will be referred to by dat.GUI's functions that add GUI elements.
@@ -16,12 +19,18 @@ const controls = {
 let square: Square;
 let screenQuad: ScreenQuad;
 let time: number = 0.0;
+let system : LSystem = new LSystem();
+//for mesh, initMeshBuffers
+let obj0: string = readTextFile('./src/resources/penguin.obj');
+let mesh : Mesh; 
 
 function loadScene() {
   square = new Square();
   square.create();
   screenQuad = new ScreenQuad();
   screenQuad.create();
+  mesh = new Mesh(obj0, vec3.fromValues(-1.0,0,0));
+  mesh.create();
 
   // Set up instanced rendering data arrays here.
   // This example creates a set of positional
@@ -29,24 +38,61 @@ function loadScene() {
   // of squares, even though the VBO data for just
   // one square is actually passed to the GPU
   let offsetsArray = [];
+  let forwardArray = [];
+  let rightArray = [];
+  let upArray = [];
   let colorsArray = [];
-  let n: number = 100.0;
+
+  //let's use our lsystem to get position!
+  //each three offsetsArrays correspond to the pos
+  //of the turtle!!
+
+  let pos = system.runSystem();
+
+  //console.log(pos.length);
+  let n = pos[0].length;
   for(let i = 0; i < n; i++) {
-    for(let j = 0; j < n; j++) {
-      offsetsArray.push(i);
-      offsetsArray.push(j);
-      offsetsArray.push(0);
+    let position : vec3 = pos[0][i];
+    let forward : vec3 = pos[1][i];
+    let right : vec3 = pos[2][i];
+    let up : vec3 = pos[3][i];
+
+      console.log("VBO POS: " + position);
+      console.log("i: " + i);
+      // console.log("VBO UP: " + up);
+      // console.log("i: " + i);
+
+      offsetsArray.push(position[0]);
+      offsetsArray.push(position[1]);
+      offsetsArray.push(position[2]);
+
+      forwardArray.push(forward[0]);
+      forwardArray.push(forward[1]);
+      forwardArray.push(forward[2]);
+
+      rightArray.push(right[0]);
+      rightArray.push(right[1]);
+      rightArray.push(right[2]);
+
+      upArray.push(up[0]);
+      upArray.push(up[1]);
+      upArray.push(up[2]);
 
       colorsArray.push(i / n);
-      colorsArray.push(j / n);
+      colorsArray.push(4.0 / n);
       colorsArray.push(1.0);
       colorsArray.push(1.0); // Alpha channel
+      
     }
-  }
   let offsets: Float32Array = new Float32Array(offsetsArray);
   let colors: Float32Array = new Float32Array(colorsArray);
+  let forwards: Float32Array = new Float32Array(forwardArray);
+  let rights: Float32Array = new Float32Array(rightArray);
+  let ups: Float32Array = new Float32Array(upArray);
   square.setInstanceVBOs(offsets, colors);
-  square.setNumInstances(n * n); // grid of "particles"
+  square.setNumInstances(n); // grid of "particles"
+  mesh.setInstanceVBOs(offsets, colors, forwards, rights, ups);
+  mesh.setNumInstances(n);
 }
 
 function main() {
@@ -74,12 +120,13 @@ function main() {
   // Initial call to load scene
   loadScene();
 
-  const camera = new Camera(vec3.fromValues(50, 50, 10), vec3.fromValues(50, 50, 0));
+  const camera = new Camera(vec3.fromValues(10, 10, 10), vec3.fromValues(0, 0, 0));
 
   const renderer = new OpenGLRenderer(canvas);
   renderer.setClearColor(0.2, 0.2, 0.2, 1);
-  gl.enable(gl.BLEND);
-  gl.blendFunc(gl.ONE, gl.ONE); // Additive blending
+  // gl.enable(gl.BLEND);
+  // gl.blendFunc(gl.ONE, gl.ONE); // Additive blending
+  gl.enable(gl.DEPTH_TEST);
 
   const instancedShader = new ShaderProgram([
     new Shader(gl.VERTEX_SHADER, require('./shaders/instanced-vert.glsl')),
@@ -101,7 +148,7 @@ function main() {
     renderer.clear();
     renderer.render(camera, flat, [screenQuad]);
     renderer.render(camera, instancedShader, [
-      square,
+      square, mesh
     ]);
     stats.end();
 

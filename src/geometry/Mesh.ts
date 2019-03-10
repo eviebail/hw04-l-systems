@@ -10,6 +10,10 @@ class Mesh extends Drawable {
   colors: Float32Array;
   uvs: Float32Array;
   center: vec4;
+  offsets: Float32Array;
+  forwards: Float32Array;
+  rights: Float32Array;
+  ups: Float32Array;
 
   objString: string;
 
@@ -20,7 +24,7 @@ class Mesh extends Drawable {
     this.objString = objString;
   }
 
-  create() {  
+  create() {
     let posTemp: Array<number> = [];
     let norTemp: Array<number> = [];
     let uvsTemp: Array<number> = [];
@@ -58,6 +62,10 @@ class Mesh extends Drawable {
     this.generateNor();
     this.generateUV();
     this.generateCol();
+    this.generateTranslate();
+    this.generateRotation();
+    this.generateRight();
+    this.generateUp();
 
     this.count = this.indices.length;
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufIdx);
@@ -78,6 +86,27 @@ class Mesh extends Drawable {
     console.log(`Created Mesh from OBJ`);
     this.objString = ""; // hacky clear
   }
+
+  setInstanceVBOs(offsets: Float32Array, colors: Float32Array, forward: Float32Array,
+    right: Float32Array, up: Float32Array) {
+    this.colors = colors;
+    this.offsets = offsets;
+    this.forwards = forward;
+    this.rights = right;
+    this.ups = up;
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufCol);
+    gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTranslate);
+    gl.bufferData(gl.ARRAY_BUFFER, this.offsets, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufRotation);
+    gl.bufferData(gl.ARRAY_BUFFER, this.forwards, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufRight);
+    gl.bufferData(gl.ARRAY_BUFFER, this.rights, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufUp);
+    gl.bufferData(gl.ARRAY_BUFFER, this.ups, gl.STATIC_DRAW);
+  }
+
 };
 
 export default Mesh;
