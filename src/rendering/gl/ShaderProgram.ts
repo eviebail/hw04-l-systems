@@ -28,7 +28,9 @@ class ShaderProgram {
   attrRotation: number;
   attrRight: number;
   attrUp: number;
+  attrScale: number;
   attrUV: number;
+  attrType: number;
 
   unifModel: WebGLUniformLocation;
   unifModelInvTr: WebGLUniformLocation;
@@ -57,7 +59,9 @@ class ShaderProgram {
     this.attrRotation = gl.getAttribLocation(this.prog, "vs_Forward");
     this.attrRight = gl.getAttribLocation(this.prog, "vs_Right");
     this.attrUp = gl.getAttribLocation(this.prog, "vs_Up");
+    this.attrScale = gl.getAttribLocation(this.prog, "vs_Scale");
     this.attrUV = gl.getAttribLocation(this.prog, "vs_UV");
+    this.attrType = gl.getAttribLocation(this.prog, "vs_Type");
     this.attrNor = gl.getAttribLocation(this.prog, "vs_Nor");
     this.unifModel      = gl.getUniformLocation(this.prog, "u_Model");
     this.unifModelInvTr = gl.getUniformLocation(this.prog, "u_ModelInvTr");
@@ -176,6 +180,18 @@ class ShaderProgram {
       gl.vertexAttribDivisor(this.attrUp, 1); // Advance 1 index in translate VBO for each drawn instance
     }
 
+    if (this.attrScale != -1 && d.bindScale()) {
+      gl.enableVertexAttribArray(this.attrScale);
+      gl.vertexAttribPointer(this.attrScale, 3, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrScale, 1); // Advance 1 index in translate VBO for each drawn instance
+    }
+
+    if (this.attrType != -1 && d.bindType()) {
+      gl.enableVertexAttribArray(this.attrType);
+      gl.vertexAttribPointer(this.attrType, 3, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrType, 1); // Advance 1 index in translate VBO for each drawn instance
+    }
+
     if (this.attrUV != -1 && d.bindUV()) {
       gl.enableVertexAttribArray(this.attrUV);
       gl.vertexAttribPointer(this.attrUV, 2, gl.FLOAT, false, 0, 0);
@@ -206,6 +222,7 @@ class ShaderProgram {
     if (this.attrRight != -1) gl.disableVertexAttribArray(this.attrRight);
     if (this.attrUp != -1) gl.disableVertexAttribArray(this.attrUp);
     if (this.attrUV != -1) gl.disableVertexAttribArray(this.attrUV);
+    if (this.attrType != -1) gl.disableVertexAttribArray(this.attrType);
   }
 };
 

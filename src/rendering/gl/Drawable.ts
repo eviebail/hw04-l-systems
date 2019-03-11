@@ -10,8 +10,10 @@ abstract class Drawable {
   bufRotation: WebGLBuffer;
   bufRight : WebGLBuffer;
   bufUp : WebGLBuffer;
+  bufScale : WebGLBuffer;
   bufCol: WebGLBuffer;
   bufUV: WebGLBuffer;
+  bufType: WebGLBuffer;
 
   idxGenerated: boolean = false;
   posGenerated: boolean = false;
@@ -21,13 +23,15 @@ abstract class Drawable {
   rotationGenerated: boolean = false;
   rightGenerated: boolean = false;
   upGenerated: boolean = false;
+  scaleGenerated: boolean = false;
+  typeGenerated: boolean = false;
   uvGenerated: boolean = false;
 
   numInstances: number = 0; // How many instances of this Drawable the shader program should draw
 
   abstract create() : void;
 
-  destory() {
+  destroy() {
     gl.deleteBuffer(this.bufIdx);
     gl.deleteBuffer(this.bufPos);
     gl.deleteBuffer(this.bufNor);
@@ -36,7 +40,9 @@ abstract class Drawable {
     gl.deleteBuffer(this.bufRotation);
     gl.deleteBuffer(this.bufRight);
     gl.deleteBuffer(this.bufUp);
+    gl.deleteBuffer(this.bufScale);
     gl.deleteBuffer(this.bufUV);
+    gl.deleteBuffer(this.bufType);
   }
 
   generateIdx() {
@@ -79,9 +85,19 @@ abstract class Drawable {
     this.bufUp = gl.createBuffer();
   }
 
+  generateScale() {
+    this.scaleGenerated = true;
+    this.bufScale = gl.createBuffer();
+  }
+
   generateUV() {
     this.uvGenerated = true;
     this.bufUV = gl.createBuffer();
+  }
+
+  generateType() {
+    this.typeGenerated = true;
+    this.bufType = gl.createBuffer();
   }
 
   bindIdx(): boolean {
@@ -138,6 +154,20 @@ abstract class Drawable {
       gl.bindBuffer(gl.ARRAY_BUFFER, this.bufUp);
     }
     return this.upGenerated;
+  }
+
+  bindScale(): boolean {
+    if (this.scaleGenerated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufScale);
+    }
+    return this.scaleGenerated;
+  }
+
+  bindType(): boolean {
+    if (this.typeGenerated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufType);
+    }
+    return this.typeGenerated;
   }
 
   bindUV(): boolean {

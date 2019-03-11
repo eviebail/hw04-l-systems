@@ -39,8 +39,10 @@ vec3 myLerp (vec3 color1, vec3 color2, float percent) {
 
 void main() {
 
-  vec3 skyColor = vec3(0.0 / 255.0, 0.0 / 255.0, 0.0 / 255.0);
-  vec3 horizonColor = vec3(70.0 / 255.0, 0.0 / 255.0, 160.0 / 255.0);
+  vec3 skyColor = vec3(32.0 / 255.0, 187.0 / 255.0, 235.0 / 255.0);
+  vec3 horizonColor = vec3(144.0 / 255.0, 221.0 / 255.0, 241.0 / 255.0);
 
-  out_Col = vec4(myLerp(horizonColor, skyColor, fs_Pos.y), 1.0); //vec4(0.5 * (fs_Pos + vec2(1.0)), 0.0, 1.0);
+	out_Col = vec4(myLerp(horizonColor, skyColor, fs_Pos.y), 1.0);
+
+   //vec4(0.5 * (fs_Pos + vec2(1.0)), 0.0, 1.0);
 }

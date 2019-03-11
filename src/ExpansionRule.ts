@@ -7,11 +7,11 @@ export default class ExpansionRule {
     constructor() {
         this.expansionRules = new Map();
         let rule : Map<string, number> = new Map();
-        rule.set("FF", 0.2);
-        rule.set("XF", 0.8);
+        rule.set("FF", 1.0);
+        rule.set("XF", 0.0);
         let ruleX : Map<string, number> = new Map();
-        ruleX.set("[+F]", 0.5);
-        ruleX.set("[-F]", 0.5);
+        ruleX.set("[-FX][+FX]FX", 0.6);
+        ruleX.set("[+F][-FX][+F][+FX]FX", 0.4);
         let ruleP : Map<string, number> = new Map();
         ruleP.set("+", 1.0);
         let ruleM : Map<string, number> = new Map();

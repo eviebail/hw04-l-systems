@@ -11,14 +11,13 @@ export default class DrawingRule {
         //generate drawRules!!
         let rule : Map<any, number> = new Map();
         rule.set(this.lsystem.moveForward.bind(this), 1.0);
-        rule.set(this.lsystem.moveBackward.bind(this), 0.0);
         let ruleX : Map<any, number> = new Map();
         let ruleR : Map<any, number> = new Map();
-        ruleR.set(this.lsystem.rotateRightUp.bind(this), 0.5);
-        ruleR.set(this.lsystem.rotateRightRight.bind(this), 0.5);
+        ruleR.set(this.lsystem.rotateRightUp.bind(this), 0.6);
+        ruleR.set(this.lsystem.rotateRightRight.bind(this), 0.4);
         let ruleL : Map<any, number> = new Map();
-        ruleL.set(this.lsystem.rotateLeftUp.bind(this), 0.5);
-        ruleL.set(this.lsystem.rotateLeftRight.bind(this), 0.5);
+        ruleL.set(this.lsystem.rotateLeftUp.bind(this), 0.4);
+        ruleL.set(this.lsystem.rotateLeftRight.bind(this), 0.6);
 
         let ruleSave : Map<any, number> = new Map();
         ruleSave.set(this.lsystem.save.bind(this), 1.0);

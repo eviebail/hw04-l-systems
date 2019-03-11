@@ -14,6 +14,8 @@ class Mesh extends Drawable {
   forwards: Float32Array;
   rights: Float32Array;
   ups: Float32Array;
+  scales: Float32Array;
+  types: Float32Array;
 
   objString: string;
 
@@ -66,6 +68,8 @@ class Mesh extends Drawable {
     this.generateRotation();
     this.generateRight();
     this.generateUp();
+    this.generateScale();
+    this.generateType();
 
     this.count = this.indices.length;
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufIdx);
@@ -88,12 +92,14 @@ class Mesh extends Drawable {
   }
 
   setInstanceVBOs(offsets: Float32Array, colors: Float32Array, forward: Float32Array,
-    right: Float32Array, up: Float32Array) {
+    right: Float32Array, up: Float32Array, scale: Float32Array, type: Float32Array) {
     this.colors = colors;
     this.offsets = offsets;
     this.forwards = forward;
     this.rights = right;
     this.ups = up;
+    this.scales = scale;
+    this.types = type;
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufCol);
     gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
@@ -105,6 +111,10 @@ class Mesh extends Drawable {
     gl.bufferData(gl.ARRAY_BUFFER, this.rights, gl.STATIC_DRAW);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufUp);
     gl.bufferData(gl.ARRAY_BUFFER, this.ups, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufScale);
+    gl.bufferData(gl.ARRAY_BUFFER, this.scales, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufType);
+    gl.bufferData(gl.ARRAY_BUFFER, this.types, gl.STATIC_DRAW);
   }
 
 };
