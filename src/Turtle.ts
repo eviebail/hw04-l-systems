@@ -53,19 +53,7 @@ export default class Turtle {
   }
 
   moveRotate(axis : number, phi : number) {
-    //console.log("Axis: " + axis + " and angle: " + phi);
-    //with a little help from Stack Exchange: https://stackoverflow.com/questions/20759214/rotating-a-3d-vector-without-a-matrix-opengl
       switch(axis) {
-        case 0: {
-          //rotate all axes about forward!
-          //Rodrigues rotation matrix about u
-          let u = vec3.fromValues(this.forward[0], this.forward[1], this.forward[2]);
-          vec3.normalize(u, u);
-          let m = mat3.fromValues(0, -u[2], u[1], u[2], 0, -u[0], -u[1], u[0], 0);
-          vec3.transformMat3(this.right, this.right, m);
-          vec3.transformMat3(this.up, this.up, m);
-          break;
-        }
         case 1: {
           //about up
           this.up = vec3.normalize(this.up, this.up);
@@ -85,17 +73,14 @@ export default class Turtle {
           let r22 = Math.cos(theta) + this.up[2]*this.up[2]*(1.0 - Math.cos(theta));
 
           let m : mat3 = mat3.fromValues(r00,r01,r02,r10,r11,r12,r20,r21,r22);
-          //mat3.fromQuat(m, q);//mat3.fromValues(0, -u[2], u[1], u[2], 0, -u[0], -u[1], u[0], 0);
           vec3.transformMat3(this.orientation, this.orientation, m);
           vec3.transformMat3(this.right, this.right, m);
           vec3.transformMat3(this.forward, this.forward, m);
-          //console.log("Up New Forward " + this.forward);
           break;
         }
         case 2: {
           //about right
           this.right = vec3.normalize(this.right, this.right);
-          //let q = quat.fromValues(this.up[0], this.up[1], this.up[2], phi * Math.PI / 180.0);
           let theta = phi * Math.PI / 180.0;
           //rodrigues formula
           let r00 = Math.cos(theta) + this.right[0]*this.right[0]*(1.0 - Math.cos(theta));
@@ -111,11 +96,9 @@ export default class Turtle {
           let r22 = Math.cos(theta) + this.right[2]*this.right[2]*(1.0 - Math.cos(theta));
 
           let m : mat3 = mat3.fromValues(r00,r01,r02,r10,r11,r12,r20,r21,r22);
-          //mat3.fromQuat(m, q);//mat3.fromValues(0, -u[2], u[1], u[2], 0, -u[0], -u[1], u[0], 0);
           vec3.transformMat3(this.orientation, this.orientation, m);
           vec3.transformMat3(this.up, this.up, m);
           vec3.transformMat3(this.forward, this.forward, m);
-          //console.log("Right New Forward " + this.forward);
           break;
         }
       }

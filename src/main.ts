@@ -73,7 +73,6 @@ function loadScene() {
 
   let pos = system.runSystem();
 
-  //console.log(pos.length);
   let n = pos[0].length;
   let nM = 0;
   let nL = 0;
@@ -88,10 +87,6 @@ function loadScene() {
     if (depth[0] > 1) {
       //leaves!
       nL+=1;
-      //console.log("VBO POS: " + position);
-      //console.log("i: " + i);
-      // console.log("VBO UP: " + up);
-      // console.log("i: " + i);
 
       offsetsArrayL.push(position[0]);
       offsetsArrayL.push(position[1] - 10);
@@ -123,10 +118,6 @@ function loadScene() {
       typeArrayL.push(controls.Leaf_Type);
     } else {
       nM+=1;
-      //console.log("VBO POS: " + position);
-      //console.log("i: " + i);
-      // console.log("VBO UP: " + up);
-      // console.log("i: " + i);
 
       offsetsArrayM.push(position[0]);
       offsetsArrayM.push(position[1] - 10);
@@ -289,7 +280,6 @@ function main() {
     }
     if (controls.NumIterations - prevExpan != 0.0) {
       prevExpan = controls.NumIterations;
-      //obj1 = readTextFile('./src/resources/penguin.obj');
       loadScene();
     }
     camera.update();

@@ -52,7 +52,6 @@ export default class LSystem {
         let currString = "";
         this.grammar = this.axiom;
         for (let i = 0; i < numExpansions; ++i) {
-            //console.log("Grammar: " + this.grammar);
             for (let j = 0; j < this.grammar.length; ++j) {
                 let xi = Math.random();
                 currString += this.map(this.grammar.charAt(j), xi); //this.expansion.getExpansion(this.grammar.charAt(j));
@@ -61,8 +60,6 @@ export default class LSystem {
             
             currString = "";
         }
-        //this.grammar = "FFFF[+FF][-FFF]";
-        console.log("Grammar: " + this.grammar);
     }
 
     mapDraw(input : string, xi : number) : any {
@@ -92,11 +89,6 @@ export default class LSystem {
             if (func) {
                 //call the function and save the new turtle pos to be saved
                 let p = func(this.current, this.turtleHistory, this.drawPositions)
-                //console.log("Pos returned: " + p);
-                //console.log("TH Size: " + this.turtleHistory.length);
-                // for (let g = 0; g < this.turtleHistory.length; g++) {
-                //     console.log("Turtle pos " + this.turtleHistory[g].position);
-                // }
                 if (p[0][0] != -1) {
                     //pos forward right up
                     pos.push(p[0]);
@@ -111,10 +103,7 @@ export default class LSystem {
                     }
                     depth.push(p[5]);
                 }
-                //console.log(pos.length);
-                //maybe let's let each function do this -> //this.drawPositions.push(this.turtleHistory[this.current]);
             }
-            //console.log(pos.length);
         }
         let container : vec3[][] = new Array();
         container.push(pos);
@@ -134,11 +123,7 @@ export default class LSystem {
 
     moveForward(curr : number, turtleHistory : Turtle[], drawPositions : Turtle[]) : vec3[] {
         let t = turtleHistory[turtleHistory.length - 1];
-        if (Math.random() < 0.5) {
-            //t.moveRotate(1, 0.1);
-        }
         t.moveForward(0.7);
-        //console.log("Depth: " + t.depth);
         
         let sc = vec3.fromValues(t.scale[0], t.scale[1], t.scale[2]);
         vec3.multiply(sc, t.scale, [0.8, 0.8, 0.8]);
@@ -150,7 +135,6 @@ export default class LSystem {
             t.rescale(s);
         }
 
-        //console.log("Orientation: " + t.forward);
         turtleHistory[turtleHistory.length - 1] = t;
         let tPos = vec3.fromValues(t.position[0], t.position[1], t.position[2]);
         let tScale = vec3.fromValues(t.scale[0], t.scale[1], t.scale[2]);
@@ -162,13 +146,8 @@ export default class LSystem {
         let o = vec3.fromValues(rotation[0], rotation[1], rotation[2]);
         let r = vec3.fromValues(rotation[4], rotation[5], rotation[6]);
         let u = vec3.fromValues(rotation[8], rotation[9], rotation[10]);
-        //console.log("Matrix: " + o + ", " + r + ", " + u);
-        let rest = vec3.fromValues(rotation[3], rotation[7], rotation[11]);
-        //console.log("The rest: " + y + ", " + rest + ": " + rotation[15]);
-        //pos forward right up
         //save depth so main knows whether to draw a branch or a leaf
         let depth = vec3.fromValues(t.depth, 0, 0);
-        console.log("Turtle: " + t.depth);
         let result = new Array();
         result.push(tPos);
         result.push(o);
@@ -181,7 +160,6 @@ export default class LSystem {
 
     //case 1 for rotate about up for testing
     rotateLeftUp(curr : number, turtleHistory : Turtle[], drawPositions : Turtle[]) : vec3[] {
-        //console.log("HI LU!");
         let t = turtleHistory[turtleHistory.length - 1];
         t.moveRotate(1, -45);
         turtleHistory[turtleHistory.length - 1] = t;
@@ -191,7 +169,6 @@ export default class LSystem {
         return result;
     }
     rotateRightUp(curr : number, turtleHistory : Turtle[], drawPositions : Turtle[]) : vec3[] {
-        //console.log("HI RU!");
         let t = turtleHistory[turtleHistory.length - 1];
         t.moveRotate(1, 45);
         turtleHistory[turtleHistory.length - 1] = t;
@@ -201,7 +178,6 @@ export default class LSystem {
         return result;
     }
     rotateLeftRight(curr : number, turtleHistory : Turtle[], drawPositions : Turtle[]) : vec3[] {
-        //console.log("HI LR!");
         let t = turtleHistory[turtleHistory.length - 1];
         t.moveRotate(2, -45);
         turtleHistory[turtleHistory.length - 1] = t;
@@ -211,7 +187,6 @@ export default class LSystem {
         return result;
     }
     rotateRightRight(curr : number, turtleHistory : Turtle[], drawPositions : Turtle[]) : vec3[] {
-        //console.log("HI RR!");
         let t = turtleHistory[turtleHistory.length - 1];
         t.moveRotate(2, 45);
         turtleHistory[turtleHistory.length - 1] = t;
@@ -222,20 +197,16 @@ export default class LSystem {
     }
     save(curr : number, turtleHistory : Turtle[], drawPositions : Turtle[]) : vec3[] {
         let t = turtleHistory[turtleHistory.length - 1];
-        //console.log("Save!! " + t.depth);
         let newTurtle = new Turtle(vec3.fromValues(0,0,0), vec3.fromValues(0,1,0), 0);
         newTurtle.copy(t);
         newTurtle.increaseDepth();
         turtleHistory.push(newTurtle);
-        // console.log("Turtle saved: " + newTurtle.depth);
         let result = new Array();
         result.push(vec3.fromValues(-1, 0, 0));
         return result;
     }
     reset(curr : number, turtleHistory : Turtle[], drawPositions : Turtle[]) : vec3[] {
         let t = turtleHistory.pop();
-        //console.log("Pop!! " + t.depth);
-        //console.log("Turtle popped: " + t.position);
         let result = new Array();
         result.push(vec3.fromValues(-1, 0, 0));
         return result;
